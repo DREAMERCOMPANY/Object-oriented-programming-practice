@@ -242,7 +242,12 @@ Object.defineProperty(Alejito, 'name', {
 
 
 
-// FACTORY PATTERN AND RORO => Patterns that help create object molds through functions.
+/* 
+FACTORY PATTERN AND RORO:
+ - Patterns that help create object molds through functions.
+ - Encapsulate parameters using Object.defineProperty.
+ - Use scope to make variables either accessible or not.
+ */
 
 // Function 'requiredParam' that throws an error indicating the specified parameter is mandatory.
 function requiredParam(param){
@@ -259,17 +264,45 @@ function createStudent({
     facebook,
     twitter,
     instagram
-} = {})
-{
-    return {
-        name,
+} = {}) {
+
+    // Private properties encapsulated within the closure.
+    const private = {
+        '_name': name
+    };
+
+    // Public properties and methods returned from the factory function.
+    const public = {
         email,
         age,
         approvedCourses,
         facebook,
         twitter,
-        instagram
+        instagram,
+
+        // Getter method for reading the private '_name'.
+        readName() {
+            return private['_name'];
+        }, 
+        // Setter method for changing the private '_name'.
+        changeName(newName) {
+            private['_name'] = newName;
+        }
     };
+
+    // Make readName and changeName non-configurable and non-writable.
+    Object.defineProperty(public, 'readName', {
+        configurable: false,
+        writable: false
+    });
+
+    Object.defineProperty(public, 'changeName', {
+        configurable: false,
+        writable: false
+    });
+
+    // Return the public interface of the created student object.
+    return public;
 }
 
 // Example of using 'createStudent' to create a student object named 'elJhon'.
@@ -277,6 +310,10 @@ const elJhon = createStudent({
     name: 'Jhon',
     email: 'hijodelrey@hotmail.com'
 });
+
+
+
+
 
 
 
