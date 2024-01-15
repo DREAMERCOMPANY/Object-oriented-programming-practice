@@ -211,6 +211,43 @@ function deepCopy(subject){
     return copySubject;
 }
 
+function createLearningPath({
+    name = requiredParam('name'),
+    courses = []
+}){
+
+    const private = {
+        '_name': name,
+        '_courses' : courses
+    }
+    const public = {
+
+        get name(){
+            return private['_name']
+
+        },
+
+        set name(newName){
+
+            if(newName.length !== 0){
+                private['_name'] = newName
+            }else{
+                console.log('Course must have at least one character.')
+            }
+
+        },
+
+        get courses(){
+            return private['_courses']
+        },
+
+        
+    }
+
+    return public;
+
+}
+
 //ABSTRACCION CON OBJETOS LITERALES Y DEEP COPY
 
 
@@ -243,7 +280,7 @@ Object.defineProperty(Alejito, 'name', {
 
 
 /* 
-FACTORY PATTERN AND RORO:
+FACTORY PATTERN AND RORO | GETTERS SETTERSs:
  - Patterns that help create object molds through functions.
  - Encapsulate parameters using Object.defineProperty.
  - Use scope to make variables either accessible or not.
@@ -261,6 +298,7 @@ function createStudent({
     email = requiredParam('email'),
     age,
     approvedCourses = [],
+    learningPaths = [],
     facebook,
     twitter,
     instagram
@@ -268,7 +306,8 @@ function createStudent({
 
     // Private properties encapsulated within the closure.
     const private = {
-        '_name': name
+        '_name': name,
+        '_learningPaths' : learningPaths
     };
 
     // Public properties and methods returned from the factory function.
@@ -280,26 +319,71 @@ function createStudent({
         twitter,
         instagram,
 
-        // Getter method for reading the private '_name'.
-        readName() {
-            return private['_name'];
-        }, 
-        // Setter method for changing the private '_name'.
-        changeName(newName) {
-            private['_name'] = newName;
+        get name(){
+            return private['_name']
+        },
+
+        set name(newName){
+
+            if(newName.length != 0){
+                private['_name'] = newName
+            } else{
+                console.warn('Please type at least one letter')
+            }
+
+        },
+
+        get learningPaths(){
+            return private['_learningPaths']
+        },
+
+        set learningPaths(newLP){
+
+            if(!newLP.name){
+                console.warn('Tu LP, No tiene nombre')
+                return;
+            }
+
+            if(!newLP.courses){
+                console.warn('Tu LP no tiene courses')
+                return;
+            }
+
+            if(!isArray(newLP.courses)){
+                console.warn('Tu LP NO es una lista de cursos.')
+                return;
+            }
+
+            private['_learningPaths'].push(newLP)
+
+            
+
         }
+
+        // Getter method for reading the private '_name'.
+
+        // readName() {
+        //     return private['_name'];
+        // }, 
+
+
+        // Setter method for changing the private '_name'.
+
+        // changeName(newName) {
+        //     private['_name'] = newName;
+        // }
     };
 
     // Make readName and changeName non-configurable and non-writable.
-    Object.defineProperty(public, 'readName', {
+    /* Object.defineProperty(public, 'readName', {
         configurable: false,
         writable: false
-    });
+    }); */
 
-    Object.defineProperty(public, 'changeName', {
+    /* Object.defineProperty(public, 'changeName', {
         configurable: false,
         writable: false
-    });
+    }); */
 
     // Return the public interface of the created student object.
     return public;
@@ -310,6 +394,17 @@ const elJhon = createStudent({
     name: 'Jhon',
     email: 'hijodelrey@hotmail.com'
 });
+
+
+
+/*¿QUE ES DUCKTYPING?:
+    -El duck typing es la forma de progamar donde identificamos a nuestros 
+    elementos dependiendo de los métodos y atributos que tengan por dentro.
+*/
+
+
+
+
 
 
 
