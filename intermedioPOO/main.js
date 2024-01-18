@@ -211,15 +211,57 @@ function deepCopy(subject){
     return copySubject;
 }
 
-function createLearningPath({
+function superObject(){}
+
+superObject.isObject = function(subject){
+    return typeof subject == 'object'
+}
+
+superObject.deepCopy = function (subject){
+    let copySubject;
+
+    const subjectisObject = isObject(subject)
+    const subjectIsArray =isArray(subject)
+
+    if(subjectIsArray){
+        copySubject = []
+    } else if(subjectisObject){
+        copySubject = {}
+    } else{
+        return copySubject;
+    }
+
+    for(key in subject){
+        const keyIsObject = isObject(subject[key])
+
+        if(keyIsObject){
+            copySubject[key] = deepCopy(subject[key])
+        }else{
+            if(subjectIsArray){
+                copySubject.push(subject[key])
+            }else{
+                copySubject[key] = subject[key]
+            }
+        }
+    }
+
+    return copySubject;
+}
+
+function LearningPath({
     name = requiredParam('name'),
     courses = []
 }){
 
-    const private = {
+    this.name = name;
+    this.courses = courses;
+
+     /* const private = {
         '_name': name,
         '_courses' : courses
     }
+
+
     const public = {
 
         get name(){
@@ -244,7 +286,7 @@ function createLearningPath({
         
     }
 
-    return public;
+    return public;  */
 
 }
 
@@ -293,7 +335,7 @@ function requiredParam(param){
 
 // Function 'createStudent' using the Factory Pattern to create a student object.
 // Parameters are destructured from an object, providing default values, and using 'requiredParam' for mandatory parameters.
-function createStudent({
+function Student({
     name = requiredParam('name'),
     email = requiredParam('email'),
     age,
@@ -304,14 +346,48 @@ function createStudent({
     instagram
 } = {}) {
 
+    
+
+    this.name = name;
+    this.email = email;
+    this.age = age;
+    this.approvedCourses = approvedCourses;
+    this.name = name;
+    this.learningPaths = []
+    
+    
+
+    this.socialMedia = {
+        facebook,
+        twitter,
+        instagram
+    }
+
+    if(!isArray(learningPaths)){
+        console.error('Learning Path is not an Array')
+    }
+
+    for(let learningPath of learningPaths){
+        if(learningPath instanceof LearningPath){
+            learningPaths.push(learningPath)
+        }
+    }
+
+    
+
+    
+
+
+    
+
     // Private properties encapsulated within the closure.
-    const private = {
+    /* const private = {
         '_name': name,
         '_learningPaths' : learningPaths
-    };
+    }; */
 
     // Public properties and methods returned from the factory function.
-    const public = {
+    /* const public = {
         email,
         age,
         approvedCourses,
@@ -358,7 +434,7 @@ function createStudent({
 
             
 
-        }
+        } */
 
         // Getter method for reading the private '_name'.
 
@@ -372,7 +448,7 @@ function createStudent({
         // changeName(newName) {
         //     private['_name'] = newName;
         // }
-    };
+    //};
 
     // Make readName and changeName non-configurable and non-writable.
     /* Object.defineProperty(public, 'readName', {
@@ -386,14 +462,19 @@ function createStudent({
     }); */
 
     // Return the public interface of the created student object.
-    return public;
+    //return public;
 }
 
 // Example of using 'createStudent' to create a student object named 'elJhon'.
-const elJhon = createStudent({
-    name: 'Jhon',
-    email: 'hijodelrey@hotmail.com'
-});
+const escuelaWeb = new LearningPath({name:'Web Development School'})
+const escuelaData = new LearningPath({name:'Data Science School'})
+const Juan = new Student({
+    name: 'Juanito', 
+    email: 'juanito.com' , 
+    learningPaths: [escuelaWeb, escuelaData, {name: 'lalala', courses: []}]
+})
+
+
 
 
 
@@ -402,6 +483,8 @@ const elJhon = createStudent({
     elementos dependiendo de los métodos y atributos que tengan por dentro.
 */
 
+
+/*Instance of con instancias y prototipos*/
 
 
 
